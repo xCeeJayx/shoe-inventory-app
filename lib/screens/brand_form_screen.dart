@@ -3,7 +3,7 @@ import '../models/brand.dart';
 import '../services/api_service.dart';
 
 class BrandFormScreen extends StatefulWidget {
-  final Brand? brand; // If null, we are adding. If provided, we are editing.
+  final Brand? brand;
 
   const BrandFormScreen({super.key, this.brand});
 
@@ -27,22 +27,20 @@ class _BrandFormScreenState extends State<BrandFormScreen> {
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       final newBrandData = Brand(
-        id: widget.brand?.id, // Keep ID if editing
+        id: widget.brand?.id,
         name: _nameController.text,
         description: _descController.text,
       );
 
       try {
         if (widget.brand == null) {
-          // ADD MODE
           await ApiService.createBrand(newBrandData);
         } else {
-          // EDIT MODE
           await ApiService.updateBrand(widget.brand!.id!, newBrandData);
         }
         
         if (mounted) {
-          Navigator.pop(context, true); // Return 'true' to indicate success
+          Navigator.pop(context, true);
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(

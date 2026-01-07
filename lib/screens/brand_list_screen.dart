@@ -26,15 +26,20 @@ class _BrandListScreenState extends State<BrandListScreen> {
   }
 
   void _deleteBrand(int id) async {
-    // Show confirmation dialog
     bool confirm = await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Delete Brand?'),
         content: const Text('This may delete all shoes associated with this brand!'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete', style: TextStyle(color: Colors.red))),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false), 
+            child: const Text('Cancel')
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true), 
+            child: const Text('Delete', style: TextStyle(color: Colors.red))
+          ),
         ],
       ),
     ) ?? false;
@@ -44,7 +49,9 @@ class _BrandListScreenState extends State<BrandListScreen> {
         await ApiService.deleteBrand(id);
         _refreshBrands();
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+        }
       }
     }
   }
@@ -52,12 +59,34 @@ class _BrandListScreenState extends State<BrandListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'BRANDS', 
+          style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.2),
+        ),
+      ),
+      
       body: FutureBuilder<List<Brand>>(
         future: _brandList,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-          if (snapshot.hasError) return Center(child: Text('Error: ${snapshot.error}'));
-          if (!snapshot.hasData || snapshot.data!.isEmpty) return const Center(child: Text('No brands found.'));
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.branding_watermark_outlined, size: 60, color: Colors.grey),
+                  SizedBox(height: 10),
+                  Text('No brands added yet.', style: TextStyle(color: Colors.grey)),
+                ],
+              ),
+            );
+          }
 
           return ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -66,10 +95,15 @@ class _BrandListScreenState extends State<BrandListScreen> {
               final brand = snapshot.data![index];
               return Card(
                 margin: const EdgeInsets.only(bottom: 12),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   leading: CircleAvatar(
-                    backgroundColor: Colors.indigo.shade100,
-                    child: Text(brand.name[0].toUpperCase()),
+                    backgroundColor: Colors.indigo.shade50,
+                    child: Text(
+                      brand.name.isNotEmpty ? brand.name[0].toUpperCase() : '?',
+                      style: const TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold),
+                    ),
                   ),
                   title: Text(brand.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text(brand.description),
@@ -87,7 +121,7 @@ class _BrandListScreenState extends State<BrandListScreen> {
                         },
                       ),
                       IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
+                        icon: const Icon(Icons.delete_outline, color: Colors.red),
                         onPressed: () => _deleteBrand(brand.id!),
                       ),
                     ],
@@ -106,7 +140,7 @@ class _BrandListScreenState extends State<BrandListScreen> {
           );
           _refreshBrands();
         },
-        backgroundColor: Colors.indigo,
+        backgroundColor: Colors.teal, 
         foregroundColor: Colors.white,
         child: const Icon(Icons.add),
       ),

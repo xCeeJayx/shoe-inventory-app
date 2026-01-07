@@ -13,12 +13,10 @@ class ShoeListScreen extends StatefulWidget {
 }
 
 class _ShoeListScreenState extends State<ShoeListScreen> {
-  // 1. Data Lists
   List<Shoe> _allShoes = [];
   List<Shoe> _filteredShoes = [];
   List<Brand> _brands = [];
 
-  // 2. Filter States
   String _searchQuery = "";
   int? _selectedBrandId;
   double? _selectedSize;
@@ -30,7 +28,6 @@ class _ShoeListScreenState extends State<ShoeListScreen> {
     _loadData();
   }
 
-  // Fetch both Shoes and Brands
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
     try {
@@ -42,7 +39,7 @@ class _ShoeListScreenState extends State<ShoeListScreen> {
           _allShoes = shoes;
           _brands = brands;
           _isLoading = false;
-          _applyFilters(); // Initial filter run
+          _applyFilters();
         });
       }
     } catch (e) {
@@ -55,17 +52,13 @@ class _ShoeListScreenState extends State<ShoeListScreen> {
     }
   }
 
-  // The Logic to Filter the List
   void _applyFilters() {
     setState(() {
       _filteredShoes = _allShoes.where((shoe) {
-        // 1. Check Search Query (Case insensitive)
         final matchesSearch = shoe.modelName.toLowerCase().contains(_searchQuery.toLowerCase());
         
-        // 2. Check Brand Filter
         final matchesBrand = _selectedBrandId == null || shoe.brandId == _selectedBrandId;
         
-        // 3. Check Size Filter
         final matchesSize = _selectedSize == null || shoe.size == _selectedSize;
 
         return matchesSearch && matchesBrand && matchesSize;
@@ -73,10 +66,9 @@ class _ShoeListScreenState extends State<ShoeListScreen> {
     });
   }
 
-  // Helper to get unique sizes for the dropdown
   List<double> _getAvailableSizes() {
     final sizes = _allShoes.map((e) => e.size).toSet().toList();
-    sizes.sort(); // Sort small to large
+    sizes.sort();
     return sizes;
   }
 
@@ -86,7 +78,7 @@ class _ShoeListScreenState extends State<ShoeListScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Shoe deleted successfully')),
       );
-      _loadData(); // Reload data
+      _loadData();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to delete shoe: $e')),
@@ -118,13 +110,11 @@ class _ShoeListScreenState extends State<ShoeListScreen> {
       ),
       body: Column(
         children: [
-          // --- SEARCH AND FILTER SECTION ---
           Container(
             padding: const EdgeInsets.all(16),
             color: Colors.white,
             child: Column(
               children: [
-                // 1. Search Bar
                 TextField(
                   decoration: const InputDecoration(
                     hintText: 'Search model name...',
@@ -139,10 +129,8 @@ class _ShoeListScreenState extends State<ShoeListScreen> {
                 ),
                 const SizedBox(height: 12),
                 
-                // 2. Filter Row (Brand & Size)
                 Row(
                   children: [
-                    // Brand Dropdown
                     Expanded(
                       child: DropdownButtonFormField<int>(
                         decoration: const InputDecoration(
@@ -151,7 +139,6 @@ class _ShoeListScreenState extends State<ShoeListScreen> {
                         ),
                         value: _selectedBrandId,
                         items: [
-                           // Add an "All Brands" option
                           const DropdownMenuItem<int>(value: null, child: Text("All Brands")),
                           ..._brands.map((Brand brand) {
                             return DropdownMenuItem<int>(
@@ -167,7 +154,6 @@ class _ShoeListScreenState extends State<ShoeListScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    // Size Dropdown
                     Expanded(
                       child: DropdownButtonFormField<double>(
                         decoration: const InputDecoration(
@@ -196,7 +182,6 @@ class _ShoeListScreenState extends State<ShoeListScreen> {
             ),
           ),
           
-          // --- THE LIST ---
           Expanded(
             child: _isLoading 
               ? const Center(child: CircularProgressIndicator())
@@ -225,7 +210,6 @@ class _ShoeListScreenState extends State<ShoeListScreen> {
     );
   }
 
-  // --- CARD WIDGET ---
   Widget _buildShoeCard(Shoe shoe) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -307,7 +291,7 @@ class _ShoeListScreenState extends State<ShoeListScreen> {
                             builder: (context) => EditShoeScreen(shoe: shoe),
                           ),
                         );
-                        _loadData(); // Refresh list after edit
+                        _loadData();
                       },
                     ),
                     IconButton(

@@ -5,7 +5,6 @@ class Brand {
 
   Brand({this.id, required this.name, required this.description});
 
-  // Convert JSON to Brand Object
   factory Brand.fromJson(Map<String, dynamic> json) {
     return Brand(
       id: json['id'],
@@ -14,7 +13,6 @@ class Brand {
     );
   }
 
-  // Convert Brand Object to JSON (for sending to API)
   Map<String, dynamic> toJson() {
     return {
       'name': name,

@@ -5,7 +5,7 @@ class Shoe {
   final double price;
   final int stockQuantity;
   final int? brandId;
-  final String? brandName; // Optional, for display purposes
+  final String? brandName;
 
   Shoe({
     this.id,

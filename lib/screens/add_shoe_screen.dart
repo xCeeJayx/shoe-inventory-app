@@ -13,13 +13,11 @@ class AddShoeScreen extends StatefulWidget {
 class _AddShoeScreenState extends State<AddShoeScreen> {
   final _formKey = GlobalKey<FormState>();
   
-  // Controllers for form inputs
   final TextEditingController _modelController = TextEditingController();
   final TextEditingController _sizeController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _stockController = TextEditingController();
   
-  // To store the selected brand
   int? _selectedBrandId;
   List<Brand> _brands = [];
 
@@ -29,7 +27,6 @@ class _AddShoeScreenState extends State<AddShoeScreen> {
     _loadBrands();
   }
 
-  // We need to fetch brands so the user can select one from a dropdown
   void _loadBrands() async {
     try {
       final brands = await ApiService.getBrands();
@@ -37,7 +34,6 @@ class _AddShoeScreenState extends State<AddShoeScreen> {
         _brands = brands;
       });
     } catch (e) {
-      // Handle error quietly or show message
       print("Error loading brands: $e");
     }
   }
@@ -55,7 +51,7 @@ class _AddShoeScreenState extends State<AddShoeScreen> {
       try {
         await ApiService.createShoe(newShoe);
         if (mounted) {
-           Navigator.pop(context); // Go back to list screen
+           Navigator.pop(context);
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -69,18 +65,16 @@ class _AddShoeScreenState extends State<AddShoeScreen> {
     }
   }
 
-  // inside add_shoe_screen.dart build()
-
 @override
 Widget build(BuildContext context) {
   return Scaffold(
-    appBar: AppBar(title: const Text('New Arrival')), // Updated Title
-    body: SingleChildScrollView( // Changed to ScrollView for better keyboard handling
-      padding: const EdgeInsets.all(24.0), // More breathing room
+    appBar: AppBar(title: const Text('New Arrival')),
+    body: SingleChildScrollView( 
+      padding: const EdgeInsets.all(24.0), 
       child: Form(
         key: _formKey,
-        child: Column( // Used Column for layout
-          crossAxisAlignment: CrossAxisAlignment.stretch, // Stretch buttons
+        child: Column( 
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text("Shoe Details", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 20),
@@ -92,7 +86,7 @@ Widget build(BuildContext context) {
             ),
             const SizedBox(height: 16),
             
-            Row( // Put Size and Price side-by-side
+            Row(
               children: [
                 Expanded(
                   child: TextFormField(

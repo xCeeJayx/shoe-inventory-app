@@ -12,7 +12,6 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
   
-  // The list of screens to switch between
   final List<Widget> _screens = [
     const ShoeListScreen(),
     const BrandListScreen(),
@@ -21,7 +20,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // We remove the AppBar here because each screen has its own (or we can unify them)
       body: IndexedStack(
         index: _currentIndex,
         children: _screens,

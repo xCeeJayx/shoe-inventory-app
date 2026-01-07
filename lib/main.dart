@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'screens/shoe_list_screen.dart';
 import 'screens/main_screen.dart';
 
 void main() {
@@ -21,7 +20,7 @@ class MyApp extends StatelessWidget {
           secondary: Colors.teal,
           brightness: Brightness.light,
         ),
-        scaffoldBackgroundColor: const Color(0xFFF5F5F5), // Light grey background
+        scaffoldBackgroundColor: const Color(0xFFF5F5F5),
         appBarTheme: const AppBarTheme(
           centerTitle: true,
           elevation: 0,

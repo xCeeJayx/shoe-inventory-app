@@ -5,7 +5,6 @@ import '../models/brand.dart';
 import '../models/shoe.dart';
 
 class ApiService {
-  //static const String baseUrl = "http://localhost:3000/api"; 
   static String get baseUrl {
     if (Platform.isAndroid) {
       return 'http://192.168.1.72:3000/api';
